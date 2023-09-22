@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  DynamicHeight,
+  DynamicHeightImproved,
+  Grid,
+  Grid2,
+  Simple,
+} from "./examples";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { CSSProperties, useState } from "react";
 
+const styles = {
+  buttonGrid: {
+    display: "flex",
+    gap: "10px",
+    margin: "10px 0px",
+  },
+  button: {
+    padding: "0px 24px",
+    borderRadius: "8px",
+    outline: "transparent solid 2px",
+    borderColor: "transparent",
+    backgroundColor: "#319795",
+    color: "white",
+    lineHeight: "1.2",
+    fontWeight: "500",
+    height: "3rem",
+  },
+} satisfies Record<string, CSSProperties>;
+
+const examplesMap = {
+  simple: Simple,
+  dynamicHeight: DynamicHeight,
+  dynamicHeightImproved: DynamicHeightImproved,
+  grid: Grid,
+  grid2: Grid2,
+};
+
+type Example = keyof typeof examplesMap;
+
+export const App = () => {
+  const [example, setExample] = useState<Example>("simple");
+  const Component = examplesMap[example];
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <div style={styles.buttonGrid}>
+        {Object.keys(examplesMap).map((exampleKey) => (
+          <button
+            key={exampleKey}
+            style={styles.button}
+            onClick={() => setExample(exampleKey as Example)}
+          >
+            {exampleKey}
+          </button>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+      {<Component />}
+    </div>
+  );
+};
